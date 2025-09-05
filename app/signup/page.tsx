@@ -13,18 +13,21 @@ export default function Signup() {
     password: "",
     username: "",
   });
-  const [buttonDisabled, setButtondisabled] = useState(false);
+  const [buttonDisabled, setButtondisabled] = useState(true);
   const [loading, setLoading] = useState(false);
 
   const onSignup = async () => {
     try {
       setLoading(true);
       const res = await axios.post("/api/users/signup", user);
-      console.log("Signup succesfull", res.data);
+      console.log("Signup successful", res.data);
+      toast.success("Signup successful!");
       router.push("/login");
     } catch (error: any) {
       console.log("Signup failed", error.message);
-      toast.error(error.message);
+      toast.error(
+        error.response?.data?.message || error.message || "Signup failed"
+      );
     } finally {
       setLoading(false);
     }
@@ -86,11 +89,11 @@ export default function Signup() {
         />
 
         <Button
-          className="w-full mt-4 bg-emerald-600 hover:bg-emerald-700 transition"
+          className="w-full mt-4 bg-emerald-600 hover:bg-emerald-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
           onClick={onSignup}
+          disabled={buttonDisabled || loading}
         >
-          {buttonDisabled ? "No signup" : "Signup"}
-          {loading ? "..." : ""}
+          {loading ? "Signing up..." : "Signup"}
         </Button>
 
         <Link
