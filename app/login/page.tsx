@@ -18,13 +18,17 @@ export default function Login() {
   const onLogin = async () => {
     try {
       setLoading(true);
-      const res = await axios.post("/api/users/login", user);
+      const res = await axios.post(
+        "/api/users/login",
+        user,
+        { withCredentials: true } // 👈 VERY IMPORTANT
+      );
       console.log("Login successful", res.data);
       toast.success("Login successful!");
       router.push("/profile");
     } catch (error: any) {
       console.log("Login failed", error.message);
-      toast.error(error.message || "Login failed");
+      toast.error(error.response?.data?.error || "Login failed");
     } finally {
       setLoading(false);
     }
